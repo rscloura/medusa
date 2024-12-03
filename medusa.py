@@ -155,7 +155,7 @@ class CLI(cmd2.Cmd):
                     self.medusa_handler = MedusaAndroid(self.device)
                 elif ("ios" in sys_params["os"]["name"].lower()):
                     self.os = "ios"
-                    self.medusa_handler = MedusaIos()
+                    self.medusa_handler = MedusaIos(self.device)
                 else:
                     raise Exception()
 

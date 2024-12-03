@@ -35,7 +35,6 @@ class MedusaIos:
     app_libraries = []
     app_info = {}
     show_commands = ['mods', 'categories', 'all']
-    device = None
     modified = False
     script = None
     detached = True
@@ -47,23 +46,10 @@ class MedusaIos:
     modManager = ModuleManager()
     package_range = ''
 
-    def __init__(self):
-        super().__init__(
-            allow_cli_args=False
-        )
-
+    def __init__(self, device):
+        self.device  =device
         self._callback = None 
         self.bind_to(self.observe_device_change)
-
-    @property
-    def device(self):
-        return self._device
-
-    @device.setter
-    def device(self, new_device):
-        self._device = new_device
-        if self._callback:
-            self._callback(new_device)
 
     def bind_to(self, callback):
         self._callback = callback
