@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Standard library imports
 import argparse
 import json
@@ -27,40 +25,16 @@ from libraries.Modules import *
 from libraries.natives import *
 from libraries.Questions import *
 
-
-RED = "\033[1;31m"
-BLUE = "\033[1;34m"
-CYAN = "\033[1;36m"
-WHITE = "\033[1;37m"
-YELLOW = "\033[1;33m"
-GREEN = "\033[0;32m"
-RESET = "\033[0;0m"
-BOLD = "\033[;1m"
-REVERSE = "\033[;7m"
-agent_script = "agent_ios.js"
-scratchpad_module = 'modules/scratchpad.imed'
-medusa_logo="""
-    ███╗   ███╗███████╗██████╗ ██╗   ██╗███████╗ █████╗ 
-    ████╗ ████║██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗    
-    ██╔████╔██║█████╗  ██║  ██║██║   ██║███████╗███████║
-    ██║╚██╔╝██║██╔══╝  ██║  ██║██║   ██║╚════██║██╔══██║
-    ██║ ╚═╝ ██║███████╗██████╔╝╚██████╔╝███████║██║  ██║
-    ╚═╝     ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝ (iOS) Version: dev  
-                                    
- 🪼 Type help for options 🪼 \n\n
-"""
-
+from constants import *
 
 # readline.set_completer_delims(readline.get_completer_delims().replace('/', ''))
 
-class Parser(cmd2.Cmd):
-    base_directory = os.path.dirname(__file__)
+class MedusaIos:
     packages = []
     system_libraries = []
     app_libraries = []
     app_info = {}
     show_commands = ['mods', 'categories', 'all']
-    prompt = BLUE + '(ios) medusa➤' + RESET
     device = None
     modified = False
     script = None
@@ -104,28 +78,9 @@ class Parser(cmd2.Cmd):
 
     def preloop(self):
         self.do_reload("dummy")
-
-        parser = argparse.ArgumentParser(
-            prog='Medusa',
-            description='An extensible and modularized framework that automates processes and techniques practiced during the dynamic analysis of Android Applications.')
-        parser.add_argument('-r', '--recipe', help='Use this option to load a session/recipe')
-        args = parser.parse_args()
-
-        if args.recipe:
-            self.write_recipe(args.recipe)
-
-        randomized_fg = lambda: tuple(random.randint(0, 255) for _ in range(3))
-
-        click.secho(medusa_logo, fg=randomized_fg(), bold=True)
         self.do_loaddevice("dummy")
 
     ###################################################### do_ defs start ############################################################
-
-    def do_clear(self, line) -> None:
-        """
-        Clear the screen (no args)
-        """
-        subprocess.run('clear', shell=True)
 
     def do_compile(self, line, rs=False) -> None:
         """
@@ -180,24 +135,6 @@ class Parser(cmd2.Cmd):
         except Exception as e:
             print(e)
         self.modified = False
-
-    def do_exit(self, line) -> None:
-        """
-        Exit MEDUSA
-        """
-        agent_path = os.path.join(self.base_directory, agent_script)
-        scratchpad_path = os.path.join(self.base_directory, scratchpad_module)
-
-        if os.path.getsize(agent_path) != 0:
-            if Polar('Do you want to reset the agent script?').ask():
-                open(os.path.join(self.base_directory, agent_script), 'w').close()
-
-        if os.path.getsize(scratchpad_path) != 119:
-            if Polar('Do you want to reset the scratchpad?').ask():
-                self.edit_scratchpad('')
-
-        print('Bye!!')
-        sys.exit()
 
     def do_export(self, line) -> None:
         """
@@ -1101,11 +1038,3 @@ Data container: {self.app_info.parameters['containers']['data']}\n""" + RESET)
                 click.echo(click.style("[!] Recipe not found !", bg='red', fg='white'))
         except Exception as e:
             print(e)
-
-
-if __name__ == '__main__':
-    if 'libedit' in readline.__doc__:
-        readline.parse_and_bind("bind ^I rl_complete")
-    else:
-        readline.parse_and_bind("tab: complete")
-    Parser().cmdloop()
