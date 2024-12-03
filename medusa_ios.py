@@ -47,7 +47,7 @@ class MedusaIos:
     package_range = ''
 
     def __init__(self, device):
-        self.device  =device
+        self.device = device
         self._callback = None 
         self.bind_to(self.observe_device_change)
 

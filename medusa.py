@@ -153,7 +153,7 @@ class CLI(cmd2.Cmd):
                     self.device_controller = android_device(self.device.id)
                     self.device_controller.print_dev_properties()
                     self.medusa_handler = MedusaAndroid(self.device)
-                elif ("ios" in sys_params["os"]["name"].lower()):
+                elif ("iphone" in sys_params["os"]["name"].lower()):
                     self.os = "ios"
                     self.medusa_handler = MedusaIos(self.device)
                 else:
